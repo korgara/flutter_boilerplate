@@ -9,7 +9,63 @@
  ```dart
   const releaseHost = 'https://google.com';
   const stagingHost = 'https://google.com';
-```
+  ```
 
 # Tests
   To run integrational tests use `flutter drive --target=./test_driver/main-flow.dart`
+
+## How does auth work?
+  There are 2 main screens with auth ui - `enter-code-screen` and `enter-email-screen`. Each of them implements `AuthProvider` and subscribes itself to `AuthScreenPresenter`.
+
+  ```dart
+  _EnterCodeScreenState() {
+    _presenter = AuthScreenPresenter(this);
+  }
+  ```
+
+  Meanwhile *main* screen listens to `AuthStateProvider`.
+
+  ```dart
+  class _MyAppState extends State<MyApp> implements AuthStateListener {
+    _MyAppState() {
+      AuthStateProvider()..subscribe(this);
+    }
+
+    @override
+    void onAuthStateChanged(AuthState state) {
+      setState(() {});
+    }
+  }
+  ```
+
+  If any of login calls succeed, `AuthStateProvider` mast be notified,
+
+  ```dart
+  @override
+  void onActionSuccess(Account acc) async {
+    Account.current = acc;
+    setState(() {
+      _isDataSending = false;
+    });
+    AuthStateProvider().notify(AuthState.LOGGED_IN);
+  }
+  ```
+  so main screen can update its state and build appropriate screen.
+
+  ```dart
+  return Account.current != null
+    ? BlocProvider<ApplicationBloc>(
+      bloc: ApplicationBloc(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: AppThemeProvider.mainTheme,
+        home: Scaffold(),
+      ),
+    ) : MaterialApp(
+      title: 'Flutter Demo',
+      theme: AppThemeProvider.mainTheme,
+      home: Scaffold(
+        body: EnterEmailScreen(),
+      ),
+    );
+  ```

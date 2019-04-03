@@ -7,4 +7,6 @@ class AppThemeProvider {
 }
 
 class AppColors {
+  // TODO: implement correct colors
+  static final buttonBg = Colors.amberAccent;
 }
