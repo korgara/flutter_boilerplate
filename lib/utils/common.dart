@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class CommonUtils {
   static String appDocsPath;
+  // TODO: implement special key if needed
+  static String pushNotificationNewMsg = 'NEW_MESSAGE';
 }
 
 void showAlert(

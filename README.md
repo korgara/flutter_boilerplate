@@ -10,13 +10,27 @@
   const releaseHost = 'https://google.com';
   const stagingHost = 'https://google.com';
   ```
+5. Quick search for key `com.example.flutter_boilerplate`, and replace it **everywhere** (you will need to do it anyway, either you won't be able to release your app to play-store).
+6. Go through all steps described here in [firebase_messaging docs](https://pub.dartlang.org/packages/firebase_messaging#getting-started).
+7. Check all TODOs in project.
 
 # Tests
   To run integrational tests use `flutter drive --target=./test_driver/main-flow.dart`
 
-# Available boilerplates
-  [**Email auth**](https://github.com/korgara/flutter_boilerplate/tree/phone_auth) - configured boilerplate with authentication via email and code. Contains everything that contains main boilerplate but more. There are 2 screens, with form, form validation, configured api login requests etc. To use it, just switch to branch `phone_auth`.
+# How does FCM work?
+  There is `PushNotifBloc`, which has currently only one stream for new messages.
+  ```dart
+    BehaviorSubject<Map<String, dynamic>> _newMsgsController = BehaviorSubject();
+    Stream<Map<String, dynamic>> get outNewMessages => _newMsgsController.stream;
+    Sink<Map<String, dynamic>> get _inNewMessages => _newMsgsController.sink;
+  ```
+  Really important to run `PushNotifBloc.init()` only one. For now we implement it in `main` method, before app launches.
 
-  `git fetch origin phone_auth` `git checkout phone_auth`
+  To handle tap on push notification alert go to *main.dart*
 
-  [**Firebase Cloud Messaging**](https://github.com/korgara/flutter_boilerplate/tree/fcm) - configured boilerplate with no auth, but initialised FCM. See docs [here](https://github.com/korgara/flutter_boilerplate/tree/fcm).
+  ```dart
+    _onReceivePushNotification(Map<String, dynamic> message) {
+      // TODO: implement tap on Push notification
+      print('---------- _onReceivePushNotification ---------- \n $message');
+    }
+  ```
