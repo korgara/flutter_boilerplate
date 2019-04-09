@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import './ui/login/enter-email-screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+import './ui/login/login-screen.dart';
 import './models/account-model.dart';
 import './ui/login/auth-state.dart';
 import './ui/theme.dart';
@@ -37,7 +37,27 @@ class _MyAppState extends State<MyApp> implements AuthStateListener {
           title: 'Flutter Demo',
           theme: AppThemeProvider.mainTheme,
           home: Scaffold(
-            body: Center(child: Text('Hello, LitsLink, you are logged in.')),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Hello, LitsLink, you are logged in.'),
+                  Account.current.picture != null
+                    ? Container(
+                        margin: EdgeInsets.only(top: 30.0),
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: NetworkImage(Account.current.picture.url)
+                          )
+                        )
+                      )
+                    : SizedBox(),
+                ],
+              )
+            ),
             appBar: AppBar(),
             drawer: Drawer(
               child: SafeArea(
@@ -59,7 +79,7 @@ class _MyAppState extends State<MyApp> implements AuthStateListener {
         title: 'Flutter Demo',
         theme: AppThemeProvider.mainTheme,
         home: Scaffold(
-          body: EnterEmailScreen(),
+          body: LoginScreen(),
         ),
       );
   }
